@@ -10,7 +10,7 @@ File Name:    Config.py
 Author(s):    Sam Whitlock
 Status:       In progress
 Notes:
-    None
+    We might should change the inputs to have the volume of helium as an input and we can calculate the rest from there
 
 """
 
@@ -160,19 +160,25 @@ balloon_masses = {
 # Direct inputs
 simulation_length = 3 # Hours
 balloon_type = "k1000" # String name; check dict below for more
-helium_mass = 100 # grams
+helium_mass = 1 # grams
 payload_mass = 3000 # grams
+
+launch_pressure = 101325 # Pa
+launch_temperature = 29 # C
+
 
 # Constants
 simulation_steps = 10000
 
 
 # Calculated
+launch_temperature = launch_temperature + 273.15 # Converting to K
 simulation_length_seconds = simulation_length * 3600 # Seconds
 delta_time = simulation_length_seconds / simulation_steps # Seconds / step
 burst_diameter = burst_diameters[balloon_type] # Meters
 balloon_mass = balloon_masses[balloon_type] # Grams
 balloon_drag_coefficient = drag_coefficients[balloon_type]
 total_mass = payload_mass + helium_mass + balloon_mass
-
+initial_volume = helium_mass * 8.314 * launch_temperature / (0.0040026 * launch_pressure) # Initial volume based on STP in m^3
+print(f"InitialVolume: {initial_volume}")
 
