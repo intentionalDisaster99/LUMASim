@@ -160,8 +160,9 @@ balloon_masses = {
 # Direct inputs
 simulation_length = 3 # Hours
 balloon_type = "k1000" # String name; check dict below for more
-helium_mass = 1 # grams
-payload_mass = 3000 # grams
+initial_gas_volume = 5 # cubic meters
+payload_mass = 1000 # grams
+parachute_area = 10
 
 launch_pressure = 101325 # Pa
 launch_temperature = 29 # C
@@ -169,6 +170,9 @@ launch_temperature = 29 # C
 
 # Constants
 simulation_steps = 10000
+balloon_gas_molar_mass = 4.002602 # g/mol
+R = 8.314  # J/(mol·K)
+
 
 
 # Calculated
@@ -178,7 +182,8 @@ delta_time = simulation_length_seconds / simulation_steps # Seconds / step
 burst_diameter = burst_diameters[balloon_type] # Meters
 balloon_mass = balloon_masses[balloon_type] # Grams
 balloon_drag_coefficient = drag_coefficients[balloon_type]
-total_mass = payload_mass + helium_mass + balloon_mass
-initial_volume = helium_mass * 8.314 * launch_temperature / (0.0040026 * launch_pressure) # Initial volume based on STP in m^3
-print(f"InitialVolume: {initial_volume}")
-
+balloon_gas_molar_mass_kg = balloon_gas_molar_mass / 1000  # Convert g/mol to kg/mol
+balloon_gas_mass = (launch_pressure * initial_gas_volume * balloon_gas_molar_mass_kg) / (R * launch_temperature)  # kg
+balloon_gas_mass *= 1000  # Convert kg to grams for consistency
+total_mass = payload_mass + balloon_gas_mass + balloon_mass # g
+moles_of_gas = (launch_pressure * initial_gas_volume) / (R * launch_temperature) # mol

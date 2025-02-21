@@ -23,17 +23,34 @@ import matplotlib.pyplot as plt
 # Initialization
 altitude = np.zeros(simulation_steps)
 time = np.arange(0, simulation_length_seconds, delta_time)
+velocity = 0
 
 # Flight loop
 for step in range(1, simulation_steps):
 
-    diameter = get_diameter(altitude[step])
 
-    # print(f"The diameter is {diameter} m at {altitude[step] / 1000} km")
 
-    ascent_rate = get_ascent_rate(altitude[step])
+    if (get_diameter(altitude[step - 1]) < burst_diameter):
+        print("up")
+        velocity = get_ascent_rate(altitude[step - 1])
 
-    altitude[step] = altitude[step - 1] + ascent_rate * delta_time
+        if velocity == -1: 
+            print("FLOATER I THINK")
+            break
+
+        altitude[step] = altitude[step - 1] + velocity * delta_time
+        # print(f"Ascent rate: {velocity} m/s Altitude: {altitude[step]}")
+
+
+    else:
+        print("down")
+        velocity = get_descent_rate(altitude[step-1], velocity)
+
+        altitude[step] = altitude[step - 1] + velocity * delta_time
+
+        if altitude[step] <= 0:
+            print("Hit the ground")
+            break
 
 
 
@@ -41,10 +58,10 @@ for step in range(1, simulation_steps):
 
 
 # Plotting 
-plt.plot(time * 3600, altitude)
+plt.plot(time / 3600, altitude/1000)
 plt.xlabel("Mission Time (h)")
-plt.ylabel("Altitude (m)")
-
+plt.ylabel("Altitude (km)")
+plt.show()
 
 
 
