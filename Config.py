@@ -160,7 +160,7 @@ balloon_masses = {
 # Direct inputs
 simulation_length = 3 # Hours
 balloon_type = "k1000" # String name; check dict below for more
-initial_gas_volume = 5 # cubic meters
+initial_gas_volume = 2.55 # cubic meters
 payload_mass = 1000 # grams
 parachute_area = 10
 

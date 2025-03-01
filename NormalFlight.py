@@ -20,19 +20,30 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Testing
+import math
+
 # Initialization
 altitude = np.zeros(simulation_steps)
 time = np.arange(0, simulation_length_seconds, delta_time)
 velocity = 0
 
+# print(f"Neck lift is {get_neck_lift(0)}")
+
+
+
 # Flight loop
 for step in range(1, simulation_steps):
 
-
+    # print(f"g = {get_g(altitude[step-1])}")
+    # print(f"altitude = {altitude[step - 1]}")
+    if math.isnan(altitude[step-1]):
+            break
 
     if (get_diameter(altitude[step - 1]) < burst_diameter):
-        print("up")
+        # print("up")
         velocity = get_ascent_rate(altitude[step - 1])
+        # print(f"Ascent rate: {velocity}")
 
         if velocity == -1: 
             print("FLOATER I THINK")
@@ -43,8 +54,8 @@ for step in range(1, simulation_steps):
 
 
     else:
-        print("down")
-        velocity = get_descent_rate(altitude[step-1], velocity)
+        # print("down")
+        velocity = -get_descent_rate(altitude[step-1], velocity)
 
         altitude[step] = altitude[step - 1] + velocity * delta_time
 

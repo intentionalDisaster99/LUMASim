@@ -64,14 +64,17 @@ def get_ascent_rate(altitude):
 def get_gross_lift(altitude):
     """ Calculates the gross lift for the balloon.
 
-    NOTE: This is the total lifting force of the gas in the balloon.
+    NOTE: This is the total amount that the gas in the balloon can lift.
 
     Args:
         altitude (float): The altitude to calculate for. (m)
     Returns:
         float: The gross lift (N)
     """
-    return initial_gas_volume * (atm.getAirDensity(altitude) - get_internal_density(altitude)) 
+    return initial_gas_volume * (atm.getAirDensity(altitude) - get_internal_density(altitude))
+    print(f"Calculated gross lift was: {initial_gas_volume * (atm.getAirDensity(altitude)) * get_g(altitude)}")
+    print(f"g: {get_g(altitude)}")
+    return initial_gas_volume * (atm.getAirDensity(altitude)) * get_g(altitude) - balloon_mass / 1000
 
 #! Might be an issue point here, math isn't mathing
 def get_neck_lift(altitude):
@@ -84,8 +87,7 @@ def get_neck_lift(altitude):
     Returns:
         float: The neck lift (N)
     """
-
-    return get_gross_lift(altitude) - balloon_mass / 1000
+    return get_gross_lift(altitude) - (balloon_mass / 1000)
 
 def get_free_lift(altitude):
     """ Calculates the free lift for the balloon at any altitude.
@@ -97,7 +99,7 @@ def get_free_lift(altitude):
     Returns:
         float: The free lift (N)
     """
-    return (get_gross_lift(altitude) - total_mass) * get_g(altitude)
+    return get_gross_lift(altitude) - (total_mass/1000) * (-get_g(altitude))
 
 def get_internal_density(altitude):
     """ Calculates the density of the gas inside the balloon at a certain altitude.
@@ -111,7 +113,7 @@ def get_internal_density(altitude):
 
 
 def get_g(altitude):
-    """ Returns the acceleration due to gravity based on altitude
+    """ Returns the magnitude of the acceleration due to gravity based on altitude
 
     Args:
         altitude (float): The altitude at which the g is to be found (m)
@@ -125,7 +127,7 @@ def get_g(altitude):
     gravitational_constant = 6.6743 * 10 ** -11
     radius_of_earth = 6.378137 * 10 ** 6
 
-    return -(gravitational_constant * mass_of_earth) / (altitude + radius_of_earth) ** 2
+    return (gravitational_constant * mass_of_earth) / (altitude + radius_of_earth) ** 2
 
 # TODO Adjust this to use the get_volume function
 def get_diameter(altitude):
@@ -189,7 +191,12 @@ def get_descent_rate(altitude, velocity):
     Returns:
         float: The new calculated ascent rate (m/s).
     """
-    if 8 * payload_mass * get_g(altitude)/(np.pi * atm.getAirDensity(altitude) * velocity ** 2) < 0: print("Invalid value in descent rate")
+    # ! This isn't working right now, but I think the issue is that it is getting huge velocities from the ascent
+    # print(f"8*{payload_mass} * {get_g(altitude)}/(np.pi*{atm.getAirDensity(altitude)}*{velocity}^2)")
+
+    if 8 * payload_mass * get_g(altitude)/(np.pi * atm.getAirDensity(altitude) * velocity ** 2) < 0: 
+        print("Invalid value in descent rate")
+        # return 0
     return np.sqrt(8 * payload_mass * get_g(altitude)/(np.pi * atm.getAirDensity(altitude) * velocity ** 2))
 
 
