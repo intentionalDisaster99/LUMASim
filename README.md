@@ -1,3 +1,7 @@
+
+> [!WARNING]  
+> This has been moved to a new repository [here](https://github.com/LUMA-Balloon/HAB-Physics-Sim), along with the rest of the code for the LUMA project.
+
 # LUMASim - WIP
 This is just a simple simulation of a balloon flight specifically to be used with the UAH Space Hardware Club Project LUMA.
 
